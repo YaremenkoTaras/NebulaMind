@@ -205,36 +205,44 @@ export default function ExecuteChainDialog({ chain, onClose }: ExecuteChainDialo
               </div>
 
               {/* Result Details */}
-              {result.status === 'COMPLETED' && (
-                <div className="bg-gray-50 rounded-lg p-4 space-y-2">
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <span className="text-gray-600">Initial Amount:</span>
-                      <span className="ml-2 font-semibold">
-                        {result.initialAmount != null ? result.initialAmount.toFixed(2) : baseAmount.toFixed(2)} {chain.baseAsset}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-gray-600">Final Amount:</span>
-                      <span className="ml-2 font-semibold">
-                        {result.finalAmount != null ? result.finalAmount.toFixed(2) : 'N/A'} {chain.baseAsset}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-gray-600">Actual Profit:</span>
-                      <span className="ml-2 font-semibold text-green-600">
-                        +{result.actualProfit?.toFixed(2)} {chain.baseAsset}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-gray-600">Actual Profit %:</span>
-                      <span className="ml-2 font-semibold text-green-600">
-                        +{result.actualProfitPercent?.toFixed(2)}%
-                      </span>
+              {result.status === 'COMPLETED' && (() => {
+                const initialAmt = result.initialAmount ?? baseAmount;
+                const finalAmt = result.finalAmount ?? 0;
+                const actualProfit = finalAmt - initialAmt;
+                const actualProfitPercent = result.profitPercent ?? 0;
+                const isProfitable = actualProfit >= 0;
+                
+                return (
+                  <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <span className="text-gray-600">Initial Amount:</span>
+                        <span className="ml-2 font-semibold">
+                          {initialAmt.toFixed(2)} {chain.baseAsset}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Final Amount:</span>
+                        <span className="ml-2 font-semibold">
+                          {finalAmt.toFixed(2)} {chain.baseAsset}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Actual Profit:</span>
+                        <span className={`ml-2 font-semibold ${isProfitable ? 'text-green-600' : 'text-red-600'}`}>
+                          {isProfitable ? '+' : ''}{actualProfit.toFixed(2)} {chain.baseAsset}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Actual Profit %:</span>
+                        <span className={`ml-2 font-semibold ${isProfitable ? 'text-green-600' : 'text-red-600'}`}>
+                          {isProfitable ? '+' : ''}{actualProfitPercent.toFixed(2)}%
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                );
+              })()}
 
               {result.errorMessage && (
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-red-700">
