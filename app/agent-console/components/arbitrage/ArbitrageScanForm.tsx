@@ -76,7 +76,7 @@ export default function ArbitrageScanForm({
           </label>
           {loadingAssets ? (
             <div className="animate-pulse bg-gray-200 h-10 rounded"></div>
-          ) : (
+          ) : assets.length > 0 ? (
             <select
               id="baseAsset"
               value={formData.baseAsset}
@@ -90,9 +90,19 @@ export default function ArbitrageScanForm({
                 </option>
               ))}
             </select>
+          ) : (
+            <input
+              id="baseAsset"
+              type="text"
+              value={formData.baseAsset}
+              onChange={(e) => handleChange('baseAsset', e.target.value.toUpperCase())}
+              placeholder="USDT"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
           )}
           <p className="mt-1 text-sm text-gray-500">
-            Currency you already have in your account
+            Currency you already have in your account (e.g., USDT, BTC, ETH)
           </p>
         </div>
 
