@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  trading-core:
+    build:
+      context: ../../
+      dockerfile: cicd/docker/Dockerfile.trading-core
+    container_name: nebulamind-trading-core
+    ports:
+      - "${CORE_PORT:-8081}:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-sandbox}
+      - CORE_PORT=8081
+      - CORE_LOG_LEVEL=${CORE_LOG_LEVEL:-INFO}
+      - RISK_MAX_PCT_EQUITY=${RISK_MAX_PCT_EQUITY:-5.0}
+      - RISK_STOP_LOSS_PCT=${RISK_STOP_LOSS_PCT:-2.0}
+      - RISK_DAILY_LOSS_LIMIT_PCT=${RISK_DAILY_LOSS_LIMIT_PCT:-10.0}
+      - BINANCE_API_KEY=${BINANCE_API_KEY:-}
+      - BINANCE_API_SECRET=${BINANCE_API_SECRET:-}
+      - BINANCE_BASE_URL=${BINANCE_BASE_URL:-https://testnet.binance.vision}
+    volumes:
+      - trading-logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/api/core/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - nebulamind-network
+
+  agent-builder:
+    build:
+      context: ../../
+      dockerfile: cicd/docker/Dockerfile.agent-builder
+    container_name: nebulamind-agent-builder
+    ports:
+      - "${AGENT_PORT:-8082}:8082"
+    environment:
+      - AGENT_PORT=8082
+      - AGENT_LOG_LEVEL=${AGENT_LOG_LEVEL:-INFO}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4}
+      - OPENAI_MAX_TOKENS=${OPENAI_MAX_TOKENS:-2000}
+      - CORE_API_URL=http://trading-core:8081
+    volumes:
+      - agent-logs:/app/logs
+    depends_on:
+      trading-core:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/api/agent/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - nebulamind-network
+
+volumes:
+  trading-logs:
+  agent-logs:
+
+networks:
+  nebulamind-network:
+    driver: bridge
+

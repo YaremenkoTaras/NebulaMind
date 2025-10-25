@@ -63,3 +63,10 @@ llm-trades.log
 tmp/
 temp/
 
+# PID files from run-local.sh
+.trading-core.pid
+.agent-builder.pid
+
+# Local environment
+.env
+
