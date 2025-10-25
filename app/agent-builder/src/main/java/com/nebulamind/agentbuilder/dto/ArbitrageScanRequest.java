@@ -38,7 +38,29 @@ public class ArbitrageScanRequest {
      * Minimum profit percentage to consider
      */
     @Min(value = 0, message = "Min profit percent cannot be negative")
-    private double minProfitPercent;
+    @Builder.Default
+    private double minProfitPercent = 1.0;  // Default 1%
+    
+    /**
+     * Budget for trading (in base asset)
+     */
+    @Min(value = 1, message = "Budget must be positive")
+    @Builder.Default
+    private double budget = 100.0;  // Default 100 USDT
+    
+    /**
+     * Task duration in minutes
+     */
+    @Min(value = 1, message = "Duration must be at least 1 minute")
+    @Builder.Default
+    private int durationMinutes = 5;  // Default 5 minutes
+    
+    /**
+     * Delay between scans in seconds (when no profitable chains found)
+     */
+    @Min(value = 1, message = "Delay must be at least 1 second")
+    @Builder.Default
+    private int delaySeconds = 10;  // Default 10 seconds
     
     /**
      * Optional reasoning for the scan
