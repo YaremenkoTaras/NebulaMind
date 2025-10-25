@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: nebulamind-agent-builder
+  jackson:
+    default-property-inclusion: non_null
+
+server:
+  port: ${AGENT_PORT:8082}
+
+logging:
+  level:
+    root: INFO
+    com.nebulamind: ${AGENT_LOG_LEVEL:DEBUG}
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: ${LOG_DIR:./logs}/agent-builder.log
+
+nebulamind:
+  agent:
+    name: TradingAgent
+    llm:
+      provider: openai
+      api-key: ${OPENAI_API_KEY}
+      model: ${OPENAI_MODEL:gpt-4}
+      max-tokens: ${OPENAI_MAX_TOKENS:2000}
+      temperature: 0.7
+    core-api:
+      base-url: ${CORE_API_URL:http://localhost:8081}
+      timeout-seconds: 30
+    audit:
+      log-path: ${LLM_TRADES_LOG_PATH:./logs/llm-trades.log}
+
