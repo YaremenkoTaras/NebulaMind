@@ -113,6 +113,8 @@
 - ✅ **CHANGELOG.md** - історія змін
 - ✅ **QUICKSTART.md** - швидкий старт
 - ✅ **DEPLOY-SPEC-FLYIO.md** - специфікація деплою
+- ✅ **CONTRIBUTING.md** - правила контрибуції
+- ✅ **GIT_WORKFLOW.md** - Git workflow та best practices
 - ✅ **cicd/local/env.example** - приклади конфігурації
 
 ## 🚧 В розробці (2/11 TODO)
@@ -301,7 +303,11 @@ RISK_DAILY_LOSS_LIMIT_PCT=10.0
 
 ## 🤝 Contributing
 
-Project готовий до contributions! Основні areas:
+Project готовий до contributions! 
+
+Детальна інформація в [CONTRIBUTING.md](CONTRIBUTING.md) та [docs/GIT_WORKFLOW.md](docs/GIT_WORKFLOW.md)
+
+Основні areas:
 
 1. **Frontend** - Console UI реалізація
 2. **Binance Integration** - Real API adapter

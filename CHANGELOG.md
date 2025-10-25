@@ -37,6 +37,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documentation:
   * docs/ARCHITECTURE.md with detailed system design
   * docs/DEPLOY-SPEC-FLYIO.md with deployment specification
+  * docs/QUICKSTART.md with quick start guide
+  * docs/GIT_WORKFLOW.md with Git workflow and GitHub best practices
+  * CONTRIBUTING.md with contribution guidelines
+  * PROJECT_STATUS.md with current project status
   * cicd/local/env.example with configuration examples
 - Java 21 configuration via jenv for local development
 - Maven settings for using Maven Central repository

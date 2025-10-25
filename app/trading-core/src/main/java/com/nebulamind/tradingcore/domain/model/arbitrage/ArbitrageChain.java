@@ -33,12 +33,12 @@ public class ArbitrageChain {
     }
     
     /**
-     * Validate chain
+     * Validate chain basic structure
      * 
-     * @param requiredSteps кількість кроків, яка має бути в ланцюжку
+     * @return true if chain is valid (circular and connected)
      */
-    public boolean isValid(int requiredSteps) {
-        if (steps == null || steps.size() != requiredSteps) {
+    public boolean isValid() {
+        if (steps == null || steps.isEmpty()) {
             return false;
         }
         
@@ -57,6 +57,20 @@ public class ArbitrageChain {
         }
         
         return true;
+    }
+    
+    /**
+     * Validate chain with required number of steps
+     * 
+     * @param requiredSteps кількість кроків, яка має бути в ланцюжку
+     * @return true if chain is valid and has exactly requiredSteps steps
+     */
+    public boolean isValid(int requiredSteps) {
+        if (steps == null || steps.size() != requiredSteps) {
+            return false;
+        }
+        
+        return isValid();
     }
     
     /**
