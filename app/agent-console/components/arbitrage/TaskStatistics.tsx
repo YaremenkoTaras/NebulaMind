@@ -61,50 +61,61 @@ export default function TaskStatistics({ statistics }: TaskStatisticsProps) {
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
-              <tr>
-                <th scope="col" className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Time
-                </th>
-                <th scope="col" className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Chain
-                </th>
-                <th scope="col" className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Amount
-                </th>
-                <th scope="col" className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Profit
-                </th>
-                <th scope="col" className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  %
-                </th>
-              </tr>
+            <tr>
+              <th scope="col" className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Time
+              </th>
+              <th scope="col" className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Chain
+              </th>
+              <th scope="col" className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Invested
+              </th>
+              <th scope="col" className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Expected
+              </th>
+              <th scope="col" className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actual
+              </th>
+              <th scope="col" className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                %
+              </th>
+            </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {executions.map((exec, index) => (
-                <tr key={exec.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                  <td className="px-4 py-2 whitespace-nowrap text-xs text-gray-500">
-                    {formatDate(exec.timestamp)}
-                  </td>
-                  <td className="px-4 py-2 text-xs text-gray-900">
-                    <div className="truncate max-w-xs" title={exec.chain.steps.join(' → ')}>
-                      {exec.chain.steps.slice(0, 2).join(' → ')}...
-                    </div>
-                  </td>
-                  <td className="px-4 py-2 whitespace-nowrap text-right text-xs text-gray-900">
-                    {exec.initialAmount.toFixed(2)}
-                  </td>
-                  <td className={`px-4 py-2 whitespace-nowrap text-right text-xs font-medium ${
-                    type === 'profit' ? 'text-green-600' : 'text-red-600'
-                  }`}>
-                    {type === 'profit' ? '+' : ''}{exec.profitAmount.toFixed(2)}
-                  </td>
-                  <td className={`px-4 py-2 whitespace-nowrap text-right text-xs font-medium ${
-                    type === 'profit' ? 'text-green-600' : 'text-red-600'
-                  }`}>
-                    {type === 'profit' ? '+' : ''}{exec.profitPercent.toFixed(2)}%
-                  </td>
-                </tr>
-              ))}
+              {executions.map((exec, index) => {
+                const expectedProfit = (exec.initialAmount * exec.expectedProfitPercent) / 100;
+                const isProfitable = exec.profitAmount >= 0;
+                
+                return (
+                  <tr key={exec.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                    <td className="px-4 py-2 whitespace-nowrap text-xs text-gray-500">
+                      {formatDate(exec.timestamp)}
+                    </td>
+                    <td className="px-4 py-2 text-xs text-gray-900">
+                      <div className="truncate max-w-xs" title={exec.chain.steps.join(' → ')}>
+                        {exec.chain.steps.slice(0, 2).join(' → ')}...
+                      </div>
+                    </td>
+                    <td className="px-4 py-2 whitespace-nowrap text-right text-xs text-gray-900">
+                      {exec.initialAmount.toFixed(2)}
+                    </td>
+                    <td className="px-4 py-2 whitespace-nowrap text-right text-xs text-blue-600">
+                      +{expectedProfit.toFixed(2)}
+                    </td>
+                    <td className={`px-4 py-2 whitespace-nowrap text-right text-xs font-medium ${
+                      isProfitable ? 'text-green-600' : 'text-red-600'
+                    }`}>
+                      {isProfitable ? '+' : ''}{exec.profitAmount.toFixed(2)}
+                    </td>
+                    <td className={`px-4 py-2 whitespace-nowrap text-right text-xs font-medium ${
+                      isProfitable ? 'text-green-600' : 'text-red-600'
+                    }`}>
+                      {isProfitable ? '+' : ''}{exec.profitPercent.toFixed(2)}%
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

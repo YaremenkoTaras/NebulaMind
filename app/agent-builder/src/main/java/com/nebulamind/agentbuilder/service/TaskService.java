@@ -270,6 +270,7 @@ public class TaskService {
                 .finalAmount(execution.getFinalAmount())
                 .profitAmount(execution.getProfitAmount())
                 .profitPercent(execution.getProfitPercent())
+                .expectedProfitPercent(execution.getExpectedProfitPercent())
                 .status(execution.getStatus())
                 .errorMessage(execution.getErrorMessage())
                 .build();

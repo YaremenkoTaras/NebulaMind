@@ -67,6 +67,7 @@ export interface ArbitrageExecution {
   finalAmount: number;
   profitAmount: number;
   profitPercent: number;
+  expectedProfitPercent: number; // Predicted profit at scan time
   status: 'COMPLETED' | 'FAILED';
   errorMessage?: string;
 }

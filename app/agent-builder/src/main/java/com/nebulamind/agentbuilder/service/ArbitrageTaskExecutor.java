@@ -157,6 +157,7 @@ public class ArbitrageTaskExecutor {
                     .finalAmount(requiredAmount)
                     .profitAmount(0.0)
                     .profitPercent(0.0)
+                    .expectedProfitPercent(bestChain.getProfitPercent()) // Save predicted profit
                     .status("FAILED")
                     .errorMessage(e.getMessage())
                     .build();
@@ -188,6 +189,7 @@ public class ArbitrageTaskExecutor {
                 .finalAmount(finalAmount)
                 .profitAmount(profitAmount)
                 .profitPercent(profitPercent)
+                .expectedProfitPercent(chainDto.getProfitPercent()) // Save predicted profit
                 .status(status != null && status.equals("COMPLETED") ? "COMPLETED" : "FAILED")
                 .errorMessage(result.containsKey("errorMessage") ? 
                         (String) result.get("errorMessage") : null)

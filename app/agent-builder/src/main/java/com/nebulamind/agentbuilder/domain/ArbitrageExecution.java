@@ -22,6 +22,7 @@ public class ArbitrageExecution {
     private Double finalAmount;
     private Double profitAmount;
     private Double profitPercent;
+    private Double expectedProfitPercent; // Predicted profit at scan time
     private String status; // COMPLETED or FAILED
     private String errorMessage;
 }
