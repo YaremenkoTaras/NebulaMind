@@ -1,0 +1,38 @@
+:8080 {
+	# Health check endpoint
+	handle /health {
+		respond "NebulaMind is running" 200
+	}
+
+	# Trading Core API
+	handle /api/core/* {
+		reverse_proxy localhost:8081
+	}
+
+	# Agent Builder API
+	handle /api/agent/* {
+		reverse_proxy localhost:8082
+	}
+
+	# Default response
+	handle {
+		respond "Welcome to NebulaMind Trading Bot" 200
+	}
+
+	# Logging
+	log {
+		output file /app/logs/caddy-access.log
+		format json
+	}
+
+	# Enable compression
+	encode gzip
+
+	# CORS for development (adjust as needed)
+	header {
+		Access-Control-Allow-Origin "*"
+		Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+		Access-Control-Allow-Headers "Content-Type, Authorization"
+	}
+}
+
