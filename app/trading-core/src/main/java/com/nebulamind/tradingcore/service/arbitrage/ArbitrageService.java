@@ -91,8 +91,15 @@ public class ArbitrageService {
                     .qtyDecimals(step.getQtyDecimals())
                     .build();
             
-            // Validate quantity
-            double stepQty = updatedStep.formatQuantity(currentAmount);
+            // Calculate actual quantity for this step
+            // For BUY: quantity = currentAmount / rate (convert quote to base)
+            // For SELL: quantity = currentAmount (already in base)
+            boolean isBuy = updatedStep.getSymbol().startsWith(updatedStep.getToAsset());
+            double stepQty = isBuy ? 
+                    updatedStep.formatQuantity(currentAmount / currentRate) :
+                    updatedStep.formatQuantity(currentAmount);
+            
+            // Validate quantity is within limits
             if (!updatedStep.isQuantityValid(stepQty)) {
                 throw new IllegalStateException(
                         String.format("Invalid quantity for %s: %.8f (min: %.8f, max: %.8f)",
@@ -101,7 +108,15 @@ public class ArbitrageService {
             }
             
             updatedSteps.add(updatedStep);
-            currentAmount = updatedStep.calculateOutput(currentAmount);
+            
+            // Calculate output for next step
+            if (isBuy) {
+                // Bought base currency
+                currentAmount = stepQty;
+            } else {
+                // Sold base currency, received quote currency
+                currentAmount = stepQty * currentRate;
+            }
         }
         
         // Calculate current profit

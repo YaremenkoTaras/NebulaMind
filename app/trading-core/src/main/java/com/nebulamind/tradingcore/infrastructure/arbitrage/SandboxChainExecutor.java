@@ -161,14 +161,36 @@ public class SandboxChainExecutor implements ChainExecutor {
     
     /**
      * Calculate order quantity
+     * 
+     * For BUY orders: we have quote currency (e.g. USDT), need to calculate base quantity
+     * For SELL orders: we have base currency already
      */
     private double calculateQuantity(ArbitrageStep step, double currentAmount) {
-        // For now, use current amount directly
-        // In real implementation, consider min/max quantities and lot sizes
-        double quantity = currentAmount;
+        Order.OrderSide side = determineSide(step);
+        double quantity;
         
-        // Format to step precision
-        return step.formatQuantity(quantity);
+        if (side == Order.OrderSide.BUY) {
+            // We have quote currency (e.g. USDT), calculate how much base we can buy
+            // quantity (base) = currentAmount (quote) / price
+            quantity = currentAmount / step.getRate();
+        } else {
+            // We have base currency already, use it directly
+            quantity = currentAmount;
+        }
+        
+        // Format to step precision and check limits
+        quantity = step.formatQuantity(quantity);
+        
+        // Clamp to min/max limits
+        if (quantity < step.getMinQty()) {
+            log.warn("Quantity {} below minimum {}, using minimum", quantity, step.getMinQty());
+            quantity = step.getMinQty();
+        } else if (quantity > step.getMaxQty()) {
+            log.warn("Quantity {} above maximum {}, using maximum", quantity, step.getMaxQty());
+            quantity = step.getMaxQty();
+        }
+        
+        return quantity;
     }
     
     /**
