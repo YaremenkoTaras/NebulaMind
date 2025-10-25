@@ -6,12 +6,13 @@
 
 ## 📊 Загальна статистика
 
-- **Commits**: 8
-- **Java Files**: 39
-- **Modules**: 2 (trading-core, agent-builder)
-- **Tests**: ✅ All passing
-- **Documentation**: Complete
+- **Commits**: 50+ (9 commits в feature/triangular-arbitrage)
+- **Java Files**: 42+ (додано arbitrage components)
+- **Modules**: 3 (trading-core, agent-builder, agent-console)
+- **Tests**: ✅ All passing (19 total: 10 trading-core, 9 agent-builder)
+- **Documentation**: Complete + Arbitrage guides
 - **CI/CD**: Configured
+- **Features**: Core Trading + **Triangular Arbitrage** 🆕
 
 ## ✅ Завершені компоненти (9/11 TODO)
 
@@ -73,6 +74,51 @@
 - Timeout configuration
 - Error handling
 
+### 3.1. ✅ Triangular Arbitrage (NEW!)
+
+**Trading Core - Backend:**
+- ✅ SandboxArbitrageAnalyzer - graph-based chain detection
+- ✅ SandboxChainExecutor - step-by-step execution engine
+- ✅ ArbitrageService - orchestration та validation
+- ✅ Quantity calculation з currency conversion
+- ✅ Min/Max quantity validation
+- ✅ Chain registration та tracking
+
+**Agent Builder - API Layer:**
+- ✅ ArbitrageToolsController - REST API endpoints
+- ✅ `/scan` - знайти profitable chains
+- ✅ `/execute` - виконати chain
+- ✅ `/assets` - список доступних активів
+- ✅ CORS конфігурація для localhost
+
+**Agent Console - UI (Next.js):**
+- ✅ ArbitrageScanForm - форма для сканування
+- ✅ ArbitrageResultsTable - таблиця з results
+- ✅ ExecuteChainDialog - діалог execution з confirmation
+- ✅ Real-time profit calculation
+- ✅ Step-by-step execution details display
+
+**Ключові фічі:**
+- ✅ Graph-based pathfinding (DFS) для chains
+- ✅ Support для 3-5 step chains
+- ✅ Min Required Amount розрахунок
+- ✅ Improved error messages (показує точну необхідну суму)
+- ✅ Execution tracking з initialAmount/finalAmount
+- ✅ Step details (amount + status) для кожного trade
+- ✅ Color-coded profit display (green/red)
+- ✅ UI validation проти insufficient amounts
+
+**Тести:**
+- ✅ 10/10 tests passing в trading-core
+- ✅ Integration tests для scan→execute flow
+- ✅ Quantity calculation tests
+- ✅ Chain registration tests
+
+**Документація:**
+- ✅ ARBITRAGE_QUICKSTART.md - швидкий старт
+- ✅ USER_GUIDE_ARBITRAGE.md - детальний гайд
+- ✅ TRIANGULAR_ARBITRAGE_IMPLEMENTATION.md - технічні деталі
+
 ### 4. ✅ Local Infrastructure
 
 **Docker:**
@@ -85,6 +131,10 @@
 - `run-local.sh` - запуск без Docker з автоматичною збіркою
 - `stop-local.sh` - graceful shutdown
 - `run-tests.sh` - запуск всіх тестів
+- `restart-local.sh` - швидкий рестарт сервісів (NEW!)
+  - Restart all: `./restart-local.sh`
+  - Restart core only: `./restart-local.sh core`
+  - Restart agent only: `./restart-local.sh agent`
 
 **Logging:**
 - Structured logging в `logs/`
