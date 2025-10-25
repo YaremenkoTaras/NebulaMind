@@ -1,0 +1,65 @@
+# Java / Spring Boot
+*.class
+*.jar
+*.war
+*.ear
+*.log
+*.ctxt
+.mtj.tmp/
+target/
+build/
+*.iml
+*.ipr
+*.iws
+.idea/
+.gradle/
+out/
+
+# Maven
+.mvn/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Node / React
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+dist/
+.next/
+.cache/
+.vite/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+.env.*.local
+*.env
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.vscode/
+*.code-workspace
+
+# Logs
+logs/
+*.log
+llm-trades.log
+
+# Docker
+.dockerignore
+
+# Fly.io
+.fly/
+
+# Temp files
+tmp/
+temp/
+
