@@ -9,7 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /**
- * Service for risk management and validation
+ * Service for API-level risk validation
+ * 
+ * Note: Domain-level risk management is handled by DefaultRiskManager
  */
 @Service
 @RequiredArgsConstructor
@@ -19,13 +21,17 @@ public class RiskService {
     private final NebulaMindProperties properties;
 
     /**
-     * Validate risk policy for an order
+     * Validate risk policy from API request
      * 
      * @param request Order request with risk policy
-     * @throws RiskLimitExceededException if risk limits are exceeded
+     * @throws RiskLimitExceededException if risk policy is invalid
      */
     public void validateRiskPolicy(PlaceOrderRequest request) {
         RiskPolicyDto policy = request.getRiskPolicy();
+        
+        if (policy == null) {
+            throw new RiskLimitExceededException("Risk policy is mandatory");
+        }
         
         // Check if stop loss is provided
         if (policy.getStopLossPct() == null || policy.getStopLossPct() <= 0) {
@@ -33,6 +39,10 @@ public class RiskService {
         }
         
         // Check max % equity
+        if (policy.getMaxPctEquity() == null) {
+            throw new RiskLimitExceededException("Max % equity is mandatory");
+        }
+        
         double maxPctEquity = properties.getRisk().getMaxPctEquity();
         if (policy.getMaxPctEquity() > maxPctEquity) {
             throw new RiskLimitExceededException(
@@ -40,24 +50,7 @@ public class RiskService {
                             policy.getMaxPctEquity(), maxPctEquity));
         }
         
-        // Check stop loss %
-        double maxStopLossPct = properties.getRisk().getStopLossPct();
-        if (policy.getStopLossPct() > maxStopLossPct) {
-            log.warn("Stop loss {} exceeds recommended maximum {}", 
-                    policy.getStopLossPct(), maxStopLossPct);
-        }
-        
         log.debug("Risk policy validated successfully for symbol={}", request.getSymbol());
-    }
-
-    /**
-     * Check if daily loss limit has been exceeded
-     * 
-     * @return true if daily loss limit exceeded
-     */
-    public boolean isDailyLossLimitExceeded() {
-        // TODO: Implement actual daily P&L tracking
-        return false;
     }
 }
 
