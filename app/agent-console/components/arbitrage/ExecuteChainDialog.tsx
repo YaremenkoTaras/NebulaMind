@@ -10,7 +10,9 @@ interface ExecuteChainDialogProps {
 }
 
 export default function ExecuteChainDialog({ chain, onClose }: ExecuteChainDialogProps) {
-  const [baseAmount, setBaseAmount] = useState(10.0);
+  // Use chain's minRequiredAmount as default, but at least 10
+  const defaultAmount = chain ? Math.max(10, chain.minRequiredAmount || 10) : 10;
+  const [baseAmount, setBaseAmount] = useState(defaultAmount);
   const [confirmed, setConfirmed] = useState(false);
   const [executing, setExecuting] = useState(false);
   const [result, setResult] = useState<ExecutionResult | null>(null);

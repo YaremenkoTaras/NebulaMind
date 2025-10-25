@@ -170,13 +170,16 @@ public class SandboxArbitrageAnalyzer implements ArbitrageAnalyzer {
                 // Calculate profit
                 double profitPercent = (accumulatedRate - 1.0) * 100.0;
                 
+                // Calculate minimum required base amount
+                double minRequired = calculateMinRequiredAmount(currentPath);
+                
                 // Create chain
                 ArbitrageChain chain = ArbitrageChain.builder()
                         .id(UUID.randomUUID().toString())
                         .baseAsset(target)
                         .steps(new ArrayList<>(currentPath))
                         .profitPercent(profitPercent)
-                        .minRequiredBaseAmount(10.0) // TODO: Calculate based on min quantities
+                        .minRequiredBaseAmount(minRequired)
                         .timestamp(Instant.now())
                         .status(ArbitrageChain.ChainStatus.FOUND)
                         .build();
@@ -261,6 +264,59 @@ public class SandboxArbitrageAnalyzer implements ArbitrageAnalyzer {
             this.base = base;
             this.quote = quote;
         }
+    }
+    
+    /**
+     * Calculate minimum required base amount for a chain
+     * Works backwards from the last step to find minimum starting amount
+     */
+    private double calculateMinRequiredAmount(List<ArbitrageStep> steps) {
+        if (steps.isEmpty()) {
+            return 10.0;
+        }
+        
+        // Start from the end and work backwards
+        // Find the maximum minQty requirement when converted to base currency
+        double maxRequired = 10.0; // Default minimum
+        
+        for (int i = 0; i < steps.size(); i++) {
+            ArbitrageStep step = steps.get(i);
+            
+            // Determine if this is a BUY or SELL
+            boolean isBuy = step.getSymbol().startsWith(step.getToAsset());
+            
+            // Calculate what baseAmount would be needed for this step to have minQty
+            double requiredForThisStep;
+            if (isBuy) {
+                // For BUY: baseAmount (quote) / rate = quantity (base)
+                // So: baseAmount = minQty * rate
+                requiredForThisStep = step.getMinQty() * step.getRate();
+            } else {
+                // For SELL: baseAmount (base) = quantity (base)
+                requiredForThisStep = step.getMinQty();
+            }
+            
+            // Propagate back through previous steps
+            for (int j = i - 1; j >= 0; j--) {
+                ArbitrageStep prevStep = steps.get(j);
+                boolean prevIsBuy = prevStep.getSymbol().startsWith(prevStep.getToAsset());
+                
+                if (prevIsBuy) {
+                    // Previous step BUYs: baseAmount / rate = output
+                    // So: baseAmount = output * rate
+                    requiredForThisStep = requiredForThisStep * prevStep.getRate();
+                } else {
+                    // Previous step SELLs: output = baseAmount * rate
+                    // So: baseAmount = output / rate
+                    requiredForThisStep = requiredForThisStep / prevStep.getRate();
+                }
+            }
+            
+            maxRequired = Math.max(maxRequired, requiredForThisStep);
+        }
+        
+        // Round up to nearest 10
+        return Math.ceil(maxRequired / 10.0) * 10.0;
     }
     
     /**
