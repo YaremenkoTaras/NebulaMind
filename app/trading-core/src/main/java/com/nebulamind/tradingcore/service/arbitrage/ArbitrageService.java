@@ -40,8 +40,17 @@ public class ArbitrageService {
         log.info("Searching for arbitrage opportunities: baseAsset={}, maxAssets={}, chainLength={}, minProfit={}%",
                 baseAsset, maxAssets, chainLength, minProfitPercent);
         
-        return arbitrageAnalyzer.findArbitrageOpportunities(
+        List<ArbitrageChain> chains = arbitrageAnalyzer.findArbitrageOpportunities(
                 baseAsset, maxAssets, chainLength, minProfitPercent);
+        
+        // Register all found chains in executor for future execution
+        for (ArbitrageChain chain : chains) {
+            chainExecutor.registerChain(chain);
+        }
+        
+        log.info("Found {} profitable chains, registered in executor", chains.size());
+        
+        return chains;
     }
     
     /**

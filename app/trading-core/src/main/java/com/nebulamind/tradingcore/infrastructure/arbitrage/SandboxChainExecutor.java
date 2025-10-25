@@ -118,6 +118,18 @@ public class SandboxChainExecutor implements ChainExecutor {
         return chains.get(chainId);
     }
     
+    @Override
+    public void registerChain(ArbitrageChain chain) {
+        log.debug("Registering chain: id={}, profit={}%", chain.getId(), chain.getProfitPercent());
+        
+        // Set initial status to FOUND if not set
+        if (chain.getStatus() == null) {
+            chain.setStatus(ArbitrageChain.ChainStatus.FOUND);
+        }
+        
+        chains.put(chain.getId(), chain);
+    }
+    
     /**
      * Create order for arbitrage step
      */

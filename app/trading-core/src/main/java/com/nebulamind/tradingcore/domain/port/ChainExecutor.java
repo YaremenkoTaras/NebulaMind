@@ -31,4 +31,12 @@ public interface ChainExecutor {
      * @return Chain with current status
      */
     ArbitrageChain getChainStatus(String chainId);
+    
+    /**
+     * Register arbitrage chain for future execution
+     * This stores the chain so it can be retrieved later by chainId
+     * 
+     * @param chain Chain to register
+     */
+    void registerChain(ArbitrageChain chain);
 }
