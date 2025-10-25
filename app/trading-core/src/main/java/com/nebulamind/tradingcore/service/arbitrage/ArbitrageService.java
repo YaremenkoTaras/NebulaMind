@@ -101,10 +101,33 @@ public class ArbitrageService {
             
             // Validate quantity is within limits
             if (!updatedStep.isQuantityValid(stepQty)) {
+                // Calculate minimum base amount needed for this step
+                double minBaseAmountNeeded;
+                if (isBuy) {
+                    // For BUY: baseAmount = minQty * rate
+                    minBaseAmountNeeded = updatedStep.getMinQty() * currentRate;
+                } else {
+                    // For SELL: baseAmount = minQty
+                    minBaseAmountNeeded = updatedStep.getMinQty();
+                }
+                
+                // Convert back through previous steps
+                for (int j = updatedSteps.size() - 1; j >= 0; j--) {
+                    ArbitrageStep prevStep = updatedSteps.get(j);
+                    boolean prevIsBuy = prevStep.getSymbol().startsWith(prevStep.getToAsset());
+                    if (prevIsBuy) {
+                        minBaseAmountNeeded = minBaseAmountNeeded * prevStep.getRate();
+                    } else {
+                        minBaseAmountNeeded = minBaseAmountNeeded / prevStep.getRate();
+                    }
+                }
+                
                 throw new IllegalStateException(
-                        String.format("Invalid quantity for %s: %.8f (min: %.8f, max: %.8f)",
-                                updatedStep.getSymbol(), stepQty,
-                                updatedStep.getMinQty(), updatedStep.getMaxQty()));
+                        String.format("Insufficient amount for %s: quantity %.8f is below minimum %.8f. " +
+                                "Please use at least %.2f %s (currently using %.2f %s)",
+                                updatedStep.getSymbol(), stepQty, updatedStep.getMinQty(),
+                                Math.ceil(minBaseAmountNeeded), chain.getBaseAsset(),
+                                baseAmount, chain.getBaseAsset()));
             }
             
             updatedSteps.add(updatedStep);
