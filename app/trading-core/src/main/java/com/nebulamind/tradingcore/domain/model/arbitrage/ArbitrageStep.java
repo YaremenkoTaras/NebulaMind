@@ -22,6 +22,10 @@ public class ArbitrageStep {
     private int priceDecimals; // Price precision
     private int qtyDecimals;   // Quantity precision
     
+    // Execution details (set during chain execution)
+    private Double amount;     // Actual quantity executed
+    private String status;     // Execution status (e.g., FILLED, PENDING, FAILED)
+    
     /**
      * Calculate output amount for input
      */

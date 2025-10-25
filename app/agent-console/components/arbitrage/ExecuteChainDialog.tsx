@@ -250,11 +250,13 @@ export default function ExecuteChainDialog({ chain, onClose }: ExecuteChainDialo
                     {result.steps.map((step, i) => (
                       <div key={i} className="flex items-center justify-between bg-gray-50 rounded p-3 text-sm">
                         <span className="font-medium">{i + 1}. {step.symbol}</span>
-                        <span className="text-gray-600">{step.amount.toFixed(8)}</span>
+                        <span className="text-gray-600">
+                          {step.amount != null ? step.amount.toFixed(8) : 'N/A'}
+                        </span>
                         <span className={`px-2 py-1 rounded text-xs font-semibold ${
                           step.status === 'FILLED' ? 'bg-green-100 text-green-800' : 'bg-gray-200 text-gray-800'
                         }`}>
-                          {step.status}
+                          {step.status || 'PENDING'}
                         </span>
                       </div>
                     ))}

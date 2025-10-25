@@ -65,6 +65,10 @@ public class SandboxChainExecutor implements ChainExecutor {
                     throw new RuntimeException("Order not filled: " + executedOrder.getStatus());
                 }
                 
+                // Update step with execution details
+                step.setAmount(executedOrder.getQuantity());
+                step.setStatus(executedOrder.getStatus().name());
+                
                 // Update context
                 context.executedOrders.add(executedOrder);
                 context.currentAmount = calculateOutputAmount(executedOrder, step);
