@@ -78,4 +78,26 @@ public class ArbitrageController {
         }
         return ResponseEntity.ok(chain);
     }
+    
+    /**
+     * Get available trading pairs
+     */
+    @GetMapping("/pairs")
+    public ResponseEntity<java.util.List<String>> getAvailablePairs() {
+        log.info("GET /api/core/arbitrage/pairs");
+        
+        java.util.List<String> pairs = arbitrageService.getAvailablePairs();
+        return ResponseEntity.ok(pairs);
+    }
+    
+    /**
+     * Get unique assets from available pairs
+     */
+    @GetMapping("/assets")
+    public ResponseEntity<java.util.Set<String>> getAvailableAssets() {
+        log.info("GET /api/core/arbitrage/assets");
+        
+        java.util.Set<String> assets = arbitrageService.getAvailableAssets();
+        return ResponseEntity.ok(assets);
+    }
 }

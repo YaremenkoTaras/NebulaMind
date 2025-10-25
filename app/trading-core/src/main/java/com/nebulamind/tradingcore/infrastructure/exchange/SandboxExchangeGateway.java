@@ -30,14 +30,54 @@ public class SandboxExchangeGateway implements ExchangeGateway {
     
     // In-memory storage
     private final Map<String, Order> orders = new ConcurrentHashMap<>();
-    private final Portfolio portfolio = initializePortfolio();
+    private Portfolio portfolio;
     
     // Simulated prices (would be replaced with mock market data)
-    private final Map<String, Double> prices = new ConcurrentHashMap<>(Map.of(
-            "BTCUSDT", 50000.0,
-            "ETHUSDT", 3000.0,
-            "BNBUSDT", 400.0
-    ));
+    private final Map<String, Double> prices = initializePrices();
+    
+    @jakarta.annotation.PostConstruct
+    public void init() {
+        portfolio = initializePortfolio();
+    }
+    
+    private Map<String, Double> initializePrices() {
+        Map<String, Double> priceMap = new ConcurrentHashMap<>();
+        
+        // USDT pairs
+        priceMap.put("BTCUSDT", 50000.0);
+        priceMap.put("ETHUSDT", 3000.0);
+        priceMap.put("BNBUSDT", 400.0);
+        priceMap.put("ADAUSDT", 0.5);
+        priceMap.put("DOGEUSDT", 0.1);
+        priceMap.put("XRPUSDT", 0.6);
+        priceMap.put("SOLUSDT", 100.0);
+        priceMap.put("DOTUSDT", 7.0);
+        priceMap.put("MATICUSDT", 0.8);
+        priceMap.put("LTCUSDT", 90.0);
+        
+        // BTC pairs
+        priceMap.put("ETHBTC", 0.06);      // ETH/BTC
+        priceMap.put("BNBBTC", 0.008);     // BNB/BTC
+        priceMap.put("ADABTC", 0.00001);   // ADA/BTC
+        priceMap.put("DOGEBTC", 0.000002); // DOGE/BTC
+        priceMap.put("XRPBTC", 0.000012);  // XRP/BTC
+        priceMap.put("SOLBTC", 0.002);     // SOL/BTC
+        priceMap.put("DOTBTC", 0.00014);   // DOT/BTC
+        priceMap.put("MATICBTC", 0.000016);// MATIC/BTC
+        priceMap.put("LTCBTC", 0.0018);    // LTC/BTC
+        
+        // ETH pairs
+        priceMap.put("BNBETH", 0.133);     // BNB/ETH
+        priceMap.put("ADAETH", 0.000167);  // ADA/ETH
+        priceMap.put("DOGEETH", 0.000033); // DOGE/ETH
+        priceMap.put("XRPETH", 0.0002);    // XRP/ETH
+        priceMap.put("SOLETH", 0.0333);    // SOL/ETH
+        priceMap.put("DOTETH", 0.00233);   // DOT/ETH
+        priceMap.put("MATICETH", 0.000267);// MATIC/ETH
+        priceMap.put("LTCETH", 0.03);      // LTC/ETH
+        
+        return priceMap;
+    }
 
     private Portfolio initializePortfolio() {
         log.info("Initializing sandbox portfolio with balance: {}", 
@@ -133,6 +173,16 @@ public class SandboxExchangeGateway implements ExchangeGateway {
     @Override
     public boolean isAvailable() {
         return true; // Sandbox is always available
+    }
+    
+    @Override
+    public java.util.List<String> getAvailablePairs() {
+        return new java.util.ArrayList<>(prices.keySet());
+    }
+    
+    @Override
+    public boolean isPairActive(String symbol) {
+        return prices.containsKey(symbol);
     }
 
     /**

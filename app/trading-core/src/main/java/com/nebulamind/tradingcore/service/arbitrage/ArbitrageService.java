@@ -130,4 +130,42 @@ public class ArbitrageService {
     public ArbitrageChain getChainStatus(String chainId) {
         return chainExecutor.getChainStatus(chainId);
     }
+    
+    /**
+     * Get list of available trading pairs
+     * 
+     * @return List of trading pairs
+     */
+    public List<String> getAvailablePairs() {
+        return arbitrageAnalyzer.getAvailablePairs();
+    }
+    
+    /**
+     * Get unique assets from available pairs
+     * 
+     * @return Set of unique assets
+     */
+    public Set<String> getAvailableAssets() {
+        List<String> pairs = getAvailablePairs();
+        Set<String> assets = new HashSet<>();
+        
+        // Extract unique assets from pairs
+        // Common quote currencies
+        String[] quotes = {"USDT", "BTC", "ETH", "BNB", "BUSD", "USD", "EUR"};
+        
+        for (String pair : pairs) {
+            for (String quote : quotes) {
+                if (pair.endsWith(quote)) {
+                    String base = pair.substring(0, pair.length() - quote.length());
+                    if (!base.isEmpty()) {
+                        assets.add(base);
+                        assets.add(quote);
+                        break;
+                    }
+                }
+            }
+        }
+        
+        return assets;
+    }
 }
