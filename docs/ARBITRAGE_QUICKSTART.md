@@ -2,7 +2,22 @@
 
 ## 🚀 Quick Test (5 minutes)
 
-### 1. Start Backend Services
+### 1. Start All Services (Fastest Method)
+
+```bash
+# One command to start everything!
+cd /Users/tyaremenko/work/NebulaMind
+./cicd/local/restart-local.sh
+```
+
+This script will:
+- Build both backend services
+- Start Trading Core (port 8081)
+- Start Agent Builder (port 8082)
+- Wait for health checks
+- Show you the status
+
+**Alternative: Manual Start**
 
 ```bash
 # Terminal 1: Trading Core
@@ -18,7 +33,7 @@ Wait for both services to start (look for "Started ... in X seconds").
 
 **Verify:**
 ```bash
-curl http://localhost:8081/api/core/health    # Should return: Trading Core is running
+curl http://localhost:8081/actuator/health    # Should return: {"status":"UP"}
 curl http://localhost:8082/api/agent/health   # Should return: Agent Builder is running
 ```
 
@@ -48,10 +63,15 @@ Open browser: http://localhost:3000/arbitrage
 
 **Step 3: Execute a Chain** (optional)
 - Click "Execute" on highest profit chain
-- Enter amount: 100
+- **Check minimum required amount** (shown in dialog)
+- Enter amount: 100 (or the minimum required)
 - Check "I understand the risks"
 - Click "Execute"
-- Should see success with actual profit
+- Should see:
+  - ✅ Execution Complete status
+  - Initial and Final amounts
+  - Actual Profit (in USDT and %)
+  - Step-by-step execution details with quantities and status (FILLED)
 
 ---
 
@@ -80,8 +100,19 @@ curl http://localhost:8082/api/agent/arbitrage/assets
 ### Execute Chain (replace {chainId})
 
 ```bash
-curl -X POST "http://localhost:8082/api/agent/arbitrage/chains/{chainId}/execute?baseAmount=100"
+curl -X POST "http://localhost:8082/api/agent/arbitrage/chains/{chainId}/execute" \
+  -H "Content-Type: application/json" \
+  -d '{"baseAmount": 100.0}'
 ```
+
+**Response includes:**
+- `status`: COMPLETED, FAILED, or EXECUTING
+- `initialAmount`: Amount used for execution
+- `finalAmount`: Amount received after all steps
+- `profitPercent`: Actual profit percentage
+- `steps[]`: Array with execution details for each step
+  - `amount`: Quantity executed
+  - `status`: FILLED, PENDING, or FAILED
 
 ---
 
@@ -93,14 +124,23 @@ cd /Users/tyaremenko/work/NebulaMind/app/agent-builder
 ./mvnw-java21.sh test
 
 # Should see: Tests run: 9, Failures: 0, Errors: 0
-# Including 7 ArbitrageToolsController tests
+# Including ArbitrageToolsController tests
 
 # Backend Tests (trading-core)  
 cd /Users/tyaremenko/work/NebulaMind/app/trading-core
 ./mvnw-java21.sh test
 
-# Should see: Tests run: 7, Failures: 0, Errors: 0
-# Including 5 ArbitrageService tests
+# Should see: Tests run: 10, Failures: 0, Errors: 0
+# Including ArbitrageService integration tests with:
+# - Chain registration tests
+# - Scan and execute flow tests
+# - Quantity calculation tests
+```
+
+**Quick test script:**
+```bash
+cd /Users/tyaremenko/work/NebulaMind
+./cicd/local/run-tests.sh
 ```
 
 ---
@@ -127,8 +167,19 @@ java -version  # Should be 21+
 lsof -i :8081  # trading-core
 lsof -i :8082  # agent-builder
 
-# Kill if needed
-kill -9 <PID>
+# Kill and restart all services
+cd /Users/tyaremenko/work/NebulaMind
+./cicd/local/restart-local.sh
+
+# Or restart just one service:
+./cicd/local/restart-local.sh core   # Only trading-core
+./cicd/local/restart-local.sh agent  # Only agent-builder
+```
+
+**View logs:**
+```bash
+tail -f /tmp/trading-core.log
+tail -f /tmp/agent-builder.log
 ```
 
 ### Frontend won't start
@@ -155,6 +206,13 @@ npm install
 - Check `.env.local` has correct URL
 - Clear browser cache (F5)
 
+### "Insufficient amount" error during execution
+- **Problem**: Chain requires more than you're trying to use
+- **Solution**: Check the **Min Required Amount** shown in the execution dialog
+- UI shows minimum required amount for each chain
+- Error message will tell you exactly how much you need
+- Example: "Please use at least 50 USDT (currently using 10 USDT)"
+
 ---
 
 ## ✅ Success Checklist
@@ -164,10 +222,17 @@ npm install
 - [ ] Agent Console starts on :3000
 - [ ] Can access /arbitrage page
 - [ ] Scan finds 3+ chains
-- [ ] Results table shows data
+- [ ] Results table shows data with profit percentages
 - [ ] Can click Execute button
-- [ ] Execution dialog opens
-- [ ] All backend tests pass (16/16)
+- [ ] Execution dialog opens and shows:
+  - [ ] Chain summary with min required amount
+  - [ ] Amount input with validation
+  - [ ] Expected profit calculation
+- [ ] Execution completes successfully showing:
+  - [ ] Initial and Final amounts
+  - [ ] Actual Profit (in USDT and %)
+  - [ ] Step-by-step execution details (qty + status)
+- [ ] All backend tests pass (19/19 total, 10 in trading-core)
 
 ---
 
@@ -180,7 +245,16 @@ npm install
 ---
 
 **Need Help?** Check logs:
-- Trading Core: `app/trading-core/logs/trading-core.log`
-- Agent Builder: `app/agent-builder/logs/agent-builder.log`
+- Trading Core: `/tmp/trading-core.log` (or `tail -f /tmp/trading-core.log`)
+- Agent Builder: `/tmp/agent-builder.log` (or `tail -f /tmp/agent-builder.log`)
 - Frontend: Browser console (F12)
+
+**Quick Commands:**
+```bash
+# Restart all services
+./cicd/local/restart-local.sh
+
+# View live logs
+tail -f /tmp/trading-core.log /tmp/agent-builder.log
+```
 

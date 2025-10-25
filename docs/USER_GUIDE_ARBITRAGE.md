@@ -36,8 +36,10 @@ This profit comes from temporary price inefficiencies in the market.
 
 Navigate to **Arbitrage** section in the NebulaMind console:
 ```
-http://localhost:8083/arbitrage
+http://localhost:3000/arbitrage
 ```
+
+(or `http://localhost:3001/arbitrage` if port 3000 is occupied)
 
 ### Step 2: Configure Scan Parameters
 
@@ -75,11 +77,35 @@ Results are displayed in a table showing:
 
 Click **"Execute"** on a chain you want to trade.
 
-A dialog will appear where you can:
-1. Enter the amount to trade
-2. See expected profit
-3. Confirm you understand the risks
-4. Execute the trades
+A dialog will appear showing:
+1. **Chain Summary**:
+   - Base Asset
+   - Number of steps
+   - Expected Profit %
+   - **⚠️ Minimum Required Amount** (IMPORTANT!)
+
+2. **Amount Input**:
+   - Enter amount to trade (must be ≥ minimum required)
+   - See real-time expected profit calculation
+   - UI validates your input against minimum
+
+3. **Risk Confirmation**:
+   - Check "I understand the risks" checkbox
+   - Click "Execute" button
+
+4. **Execution Progress**:
+   - Shows "Executing trades..." with loading spinner
+   - Executes all trades step-by-step
+
+5. **Execution Results**:
+   - ✅ **Status**: COMPLETED (or FAILED if error)
+   - **Initial Amount**: What you started with
+   - **Final Amount**: What you received
+   - **Actual Profit**: In USDT and % (green if profitable, red if loss)
+   - **Trade Steps**: Detailed execution for each step:
+     - Symbol (e.g., BTCUSDT)
+     - Quantity executed (e.g., 0.002 BTC)
+     - Status (FILLED, PENDING, or FAILED)
 
 ---
 
@@ -200,7 +226,16 @@ When you click "Execute", you'll see:
 
 ### After Execution
 
-Results show:
+**Success Screen** shows:
+- ✅ **Execution Successful!** message (green background)
+- **Initial Amount**: What you started with (e.g., 100.00 USDT)
+- **Final Amount**: What you ended with (e.g., 100.78 USDT)
+- **Actual Profit**: Difference in USDT (e.g., +0.78 USDT)
+- **Actual Profit %**: Percentage gain/loss (e.g., +0.78%)
+- **Color coding**: Green for profit, Red for loss
+
+**Trade Steps Detail**:
+Each step shows:
 - ✅ **Success**: Final amount, actual profit, all trade details
 - ❌ **Failure**: Error message, what went wrong
 - ⚠️ **Cancelled**: If you cancelled mid-execution
@@ -234,11 +269,13 @@ Results show:
 ### Best Practices
 
 ✅ **DO:**
-- Start with small amounts (10-100 USDT)
+- **Always check Minimum Required Amount** before execution
+- Start with small amounts (10-100 USDT) but above minimum
 - Target profits ≥ 1% for safety margin
-- Execute chains with recent timestamps
-- Use liquid major assets (BTC, ETH, BNB)
+- Execute chains with recent timestamps (<1 minute old)
+- Use liquid major assets (BTC, ETH, BNB, USDT)
 - Monitor your first few executions closely
+- Read error messages carefully (they tell you exactly what's needed)
 
 ❌ **DON'T:**
 - Don't trade during extreme volatility
@@ -246,6 +283,9 @@ Results show:
 - Don't chase tiny profits (<0.5%)
 - Don't execute old opportunities (>2 min)
 - Don't ignore the risk warnings
+- **Don't try to execute with less than minimum required amount**
+  - Error: "Please use at least X USDT (currently using Y USDT)"
+  - Solution: Increase your amount or choose different chain
 
 ### Position Sizing
 
@@ -301,6 +341,28 @@ Results show:
 
 **Solution:** Enter a positive number ≥ minimum required amount
 
+### "Insufficient amount" / "Invalid quantity"
+
+**Error example:**
+```
+Insufficient amount for BTCUSDT: quantity 0.00020017 is below minimum 0.001.
+Please use at least 50 USDT (currently using 10 USDT)
+```
+
+**Cause:** The amount you entered is too small for the exchange's minimum quantity limits
+
+**Solutions:**
+1. **Check Min Required Amount** in the execution dialog (shows before you enter amount)
+2. **Increase your amount** to at least the minimum shown
+3. **Choose different chain** if the minimum is too high for your budget
+4. **UI Protection**: The input field shows the minimum and validates your entry
+
+**Why this happens:**
+- Each trading pair has minimum order sizes (e.g., 0.001 BTC)
+- Your base amount gets converted through multiple steps
+- If any step falls below its minimum, execution fails
+- System now calculates and shows you the required minimum upfront
+
 ### API Connection Errors
 
 **Symptoms:**
@@ -309,13 +371,25 @@ Results show:
 - Timeout errors
 
 **Solutions:**
-1. Check backend services are running:
+1. **Restart all services** (easiest):
+   ```bash
+   cd /Users/tyaremenko/work/NebulaMind
+   ./cicd/local/restart-local.sh
+   ```
+
+2. Check backend services are running:
    ```bash
    # Check trading-core
-   curl http://localhost:8081/api/core/health
+   curl http://localhost:8081/actuator/health
    
    # Check agent-builder  
    curl http://localhost:8082/api/agent/health
+   ```
+
+3. View logs for errors:
+   ```bash
+   tail -f /tmp/trading-core.log
+   tail -f /tmp/agent-builder.log
    ```
 
 2. Verify `.env.local` has correct URL:
