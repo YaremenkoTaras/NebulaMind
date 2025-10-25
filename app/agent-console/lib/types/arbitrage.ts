@@ -36,13 +36,67 @@ export interface ExecutionResult {
   status: 'EXECUTING' | 'COMPLETED' | 'FAILED' | 'CANCELLED';
   initialAmount: number;
   finalAmount?: number;
-  actualProfit?: number;
-  actualProfitPercent?: number;
+  profitPercent?: number;
   steps?: Array<{
     symbol: string;
     amount: number;
     status: string;
   }>;
   errorMessage?: string;
+}
+
+// Task-related types
+export type TaskStatus = 'PENDING' | 'RUNNING' | 'STOPPED' | 'COMPLETED' | 'FAILED';
+
+export interface TaskCreateRequest {
+  baseAsset: string;
+  budget: number; // default 100
+  executionTimeMinutes: number; // default 5
+  delaySeconds: number; // default 10
+  minProfitPercent: number; // default 1.0
+  maxAssets: number;
+  chainLength: number;
+}
+
+export interface ArbitrageExecution {
+  id: string;
+  chainId: string;
+  chain: ArbitrageChain;
+  timestamp: string;
+  initialAmount: number;
+  finalAmount: number;
+  profitAmount: number;
+  profitPercent: number;
+  status: 'COMPLETED' | 'FAILED';
+  errorMessage?: string;
+}
+
+export interface Task {
+  id: string;
+  status: TaskStatus;
+  baseAsset: string;
+  budget: number;
+  currentBudget: number;
+  executionTimeMinutes: number;
+  delaySeconds: number;
+  minProfitPercent: number;
+  maxAssets: number;
+  chainLength: number;
+  createdAt: string;
+  startedAt?: string;
+  completedAt?: string;
+  totalProfit: number;
+  totalLoss: number;
+  executionsCount: number;
+  executions: ArbitrageExecution[];
+}
+
+export interface TaskStatistics {
+  task: Task;
+  profitableExecutions: ArbitrageExecution[];
+  lossExecutions: ArbitrageExecution[];
+  totalProfit: number;
+  totalLoss: number;
+  netProfit: number;
 }
 

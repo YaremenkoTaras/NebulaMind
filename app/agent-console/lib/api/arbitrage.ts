@@ -6,6 +6,9 @@ import {
   ArbitrageScanRequest,
   ArbitrageScanResponse,
   ExecutionResult,
+  TaskCreateRequest,
+  Task,
+  TaskStatistics,
 } from '../types/arbitrage';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_AGENT_BUILDER_URL || 'http://localhost:8082';
@@ -78,6 +81,114 @@ export const arbitrageApi = {
     );
 
     return handleResponse<ExecutionResult>(response);
+  },
+
+  // Task API methods
+  
+  /**
+   * Create a new arbitrage task
+   */
+  async createTask(request: TaskCreateRequest): Promise<Task> {
+    const response = await fetch(`${API_BASE_URL}/api/agent/arbitrage/tasks`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(request),
+    });
+
+    return handleResponse<Task>(response);
+  },
+
+  /**
+   * Get all tasks
+   */
+  async getTasks(): Promise<Task[]> {
+    const response = await fetch(`${API_BASE_URL}/api/agent/arbitrage/tasks`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return handleResponse<Task[]>(response);
+  },
+
+  /**
+   * Get task by ID
+   */
+  async getTask(taskId: string): Promise<Task> {
+    const response = await fetch(`${API_BASE_URL}/api/agent/arbitrage/tasks/${taskId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return handleResponse<Task>(response);
+  },
+
+  /**
+   * Start a task
+   */
+  async startTask(taskId: string): Promise<Task> {
+    const response = await fetch(`${API_BASE_URL}/api/agent/arbitrage/tasks/${taskId}/start`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return handleResponse<Task>(response);
+  },
+
+  /**
+   * Stop a task
+   */
+  async stopTask(taskId: string): Promise<Task> {
+    const response = await fetch(`${API_BASE_URL}/api/agent/arbitrage/tasks/${taskId}/stop`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return handleResponse<Task>(response);
+  },
+
+  /**
+   * Get task statistics
+   */
+  async getTaskStatistics(taskId: string): Promise<TaskStatistics> {
+    const response = await fetch(`${API_BASE_URL}/api/agent/arbitrage/tasks/${taskId}/statistics`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return handleResponse<TaskStatistics>(response);
+  },
+
+  /**
+   * Delete a task
+   */
+  async deleteTask(taskId: string): Promise<void> {
+    const response = await fetch(`${API_BASE_URL}/api/agent/arbitrage/tasks/${taskId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new ArbitrageApiError(
+        error.message || `API Error: ${response.status}`,
+        response.status,
+        error
+      );
+    }
   },
 };
 

@@ -1,39 +1,96 @@
 'use client';
 
-import { useState } from 'react';
-import ArbitrageScanForm from '@/components/arbitrage/ArbitrageScanForm';
-import ArbitrageResultsTable from '@/components/arbitrage/ArbitrageResultsTable';
-import ExecuteChainDialog from '@/components/arbitrage/ExecuteChainDialog';
-import type { ArbitrageScanResponse, ArbitrageChain } from '@/lib/types/arbitrage';
+import { useState, useEffect } from 'react';
+import TaskCreateForm from '@/components/arbitrage/ArbitrageScanForm';
+import TasksTable from '@/components/arbitrage/TasksTable';
+import TaskStatistics from '@/components/arbitrage/TaskStatistics';
+import { arbitrageApi } from '@/lib/api/arbitrage';
+import type { Task, TaskStatistics as TaskStats } from '@/lib/types/arbitrage';
 
 export default function ArbitragePage() {
-  const [scanning, setScanning] = useState(false);
-  const [results, setResults] = useState<ArbitrageScanResponse | null>(null);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
+  const [statistics, setStatistics] = useState<TaskStats | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [selectedChain, setSelectedChain] = useState<ArbitrageChain | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const handleScanStart = () => {
-    setScanning(true);
+  // Load tasks on mount and set up polling
+  useEffect(() => {
+    loadTasks();
+    const interval = setInterval(loadTasks, 3000); // Refresh every 3 seconds
+    return () => clearInterval(interval);
+  }, []);
+
+  // Load statistics when task is selected
+  useEffect(() => {
+    if (selectedTaskId) {
+      loadTaskStatistics(selectedTaskId);
+    } else {
+      setStatistics(null);
+    }
+  }, [selectedTaskId]);
+
+  const loadTasks = async () => {
+    try {
+      const data = await arbitrageApi.getTasks();
+      setTasks(data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Failed to load tasks:', error);
+      setLoading(false);
+    }
+  };
+
+  const loadTaskStatistics = async (taskId: string) => {
+    try {
+      const data = await arbitrageApi.getTaskStatistics(taskId);
+      setStatistics(data);
+    } catch (error) {
+      console.error('Failed to load task statistics:', error);
+    }
+  };
+
+  const handleTaskCreated = () => {
     setError(null);
-    setResults(null);
+    loadTasks();
   };
 
-  const handleScanComplete = (data: ArbitrageScanResponse) => {
-    setResults(data);
-    setScanning(false);
-  };
-
-  const handleScanError = (err: Error) => {
+  const handleError = (err: Error) => {
     setError(err.message);
-    setScanning(false);
   };
 
-  const handleExecute = (chain: ArbitrageChain) => {
-    setSelectedChain(chain);
+  const handleStartTask = async (taskId: string) => {
+    try {
+      await arbitrageApi.startTask(taskId);
+      loadTasks();
+    } catch (error) {
+      setError((error as Error).message);
+    }
   };
 
-  const handleCloseDialog = () => {
-    setSelectedChain(null);
+  const handleStopTask = async (taskId: string) => {
+    try {
+      await arbitrageApi.stopTask(taskId);
+      loadTasks();
+    } catch (error) {
+      setError((error as Error).message);
+    }
+  };
+
+  const handleDeleteTask = async (taskId: string) => {
+    try {
+      await arbitrageApi.deleteTask(taskId);
+      if (selectedTaskId === taskId) {
+        setSelectedTaskId(null);
+      }
+      loadTasks();
+    } catch (error) {
+      setError((error as Error).message);
+    }
+  };
+
+  const handleSelectTask = (taskId: string) => {
+    setSelectedTaskId(taskId);
   };
 
   return (
@@ -41,19 +98,10 @@ export default function ArbitragePage() {
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">Triangular Arbitrage</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Triangular Arbitrage - Automated Tasks</h1>
           <p className="mt-2 text-sm text-gray-600">
-            Find and execute profitable arbitrage opportunities through multi-currency chains
+            Create automated arbitrage tasks that continuously scan and execute profitable opportunities
           </p>
-        </div>
-
-        {/* Scan Form */}
-        <div className="mb-6">
-          <ArbitrageScanForm
-            onScanStart={handleScanStart}
-            onScanComplete={handleScanComplete}
-            onScanError={handleScanError}
-          />
         </div>
 
         {/* Error Message */}
@@ -77,12 +125,28 @@ export default function ArbitragePage() {
                 <h3 className="text-sm font-medium text-red-800">Error</h3>
                 <div className="mt-2 text-sm text-red-700">{error}</div>
               </div>
+              <button
+                onClick={() => setError(null)}
+                className="ml-auto flex-shrink-0 text-red-400 hover:text-red-500"
+              >
+                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
             </div>
           </div>
         )}
 
-        {/* Loading State */}
-        {scanning && (
+        {/* Task Creation Form */}
+        <div className="mb-6">
+          <TaskCreateForm
+            onTaskCreated={handleTaskCreated}
+            onError={handleError}
+          />
+        </div>
+
+        {/* Tasks Table */}
+        {loading ? (
           <div className="mb-6 bg-white shadow-md rounded-lg p-12">
             <div className="flex flex-col items-center justify-center">
               <svg
@@ -105,31 +169,26 @@ export default function ArbitragePage() {
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
               </svg>
-              <p className="mt-4 text-lg font-medium text-gray-900">
-                Scanning for arbitrage opportunities...
-              </p>
-              <p className="mt-2 text-sm text-gray-500">
-                Analyzing market rates and finding profitable chains
-              </p>
+              <p className="mt-4 text-lg font-medium text-gray-900">Loading tasks...</p>
             </div>
           </div>
-        )}
-
-        {/* Results Table */}
-        {results && !scanning && (
+        ) : (
           <div className="mb-6">
-            <ArbitrageResultsTable
-              chains={results.chains}
-              summary={results.summary}
-              onExecute={handleExecute}
+            <TasksTable
+              tasks={tasks}
+              selectedTaskId={selectedTaskId}
+              onSelectTask={handleSelectTask}
+              onStartTask={handleStartTask}
+              onStopTask={handleStopTask}
+              onDeleteTask={handleDeleteTask}
             />
           </div>
         )}
 
-        {/* Execute Dialog */}
-        {selectedChain && (
-          <ExecuteChainDialog chain={selectedChain} onClose={handleCloseDialog} />
-        )}
+        {/* Task Statistics */}
+        <div className="mb-6">
+          <TaskStatistics statistics={statistics} />
+        </div>
       </div>
     </div>
   );
