@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class TaskExecutor {
+public class ArbitrageTaskExecutor {
     
     private final TaskService taskService;
     private final ArbitrageTools arbitrageTools;
