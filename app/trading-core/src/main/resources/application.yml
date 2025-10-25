@@ -1,0 +1,95 @@
+spring:
+  application:
+    name: nebulamind-trading-core
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:sandbox}
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+
+server:
+  port: ${CORE_PORT:8081}
+  error:
+    include-message: always
+    include-binding-errors: always
+
+logging:
+  level:
+    root: INFO
+    com.nebulamind: ${CORE_LOG_LEVEL:DEBUG}
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: ${LOG_DIR:./logs}/trading-core.log
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+
+---
+# Sandbox Profile (in-memory, no real API)
+spring:
+  config:
+    activate:
+      on-profile: sandbox
+
+nebulamind:
+  exchange:
+    type: sandbox
+    name: FakeBinance
+  risk:
+    max-pct-equity: ${RISK_MAX_PCT_EQUITY:5.0}
+    stop-loss-pct: ${RISK_STOP_LOSS_PCT:2.0}
+    daily-loss-limit-pct: ${RISK_DAILY_LOSS_LIMIT_PCT:10.0}
+  sandbox:
+    initial-balance: 10000.0
+    initial-btc: 0.0
+
+---
+# Development Profile (Binance Testnet)
+spring:
+  config:
+    activate:
+      on-profile: development
+
+nebulamind:
+  exchange:
+    type: binance
+    name: BinanceTestnet
+    api-key: ${BINANCE_API_KEY}
+    api-secret: ${BINANCE_API_SECRET}
+    base-url: ${BINANCE_BASE_URL:https://testnet.binance.vision}
+  risk:
+    max-pct-equity: ${RISK_MAX_PCT_EQUITY:5.0}
+    stop-loss-pct: ${RISK_STOP_LOSS_PCT:2.0}
+    daily-loss-limit-pct: ${RISK_DAILY_LOSS_LIMIT_PCT:10.0}
+
+---
+# Production Profile (Real Binance)
+spring:
+  config:
+    activate:
+      on-profile: production
+
+nebulamind:
+  exchange:
+    type: binance
+    name: BinanceLive
+    api-key: ${BINANCE_API_KEY}
+    api-secret: ${BINANCE_API_SECRET}
+    base-url: ${BINANCE_BASE_URL:https://api.binance.com}
+  risk:
+    max-pct-equity: ${RISK_MAX_PCT_EQUITY:2.0}
+    stop-loss-pct: ${RISK_STOP_LOSS_PCT:1.5}
+    daily-loss-limit-pct: ${RISK_DAILY_LOSS_LIMIT_PCT:5.0}
+
+logging:
+  level:
+    com.nebulamind: INFO
+
