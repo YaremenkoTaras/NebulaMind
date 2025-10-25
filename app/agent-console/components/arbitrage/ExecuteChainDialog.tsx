@@ -210,11 +210,15 @@ export default function ExecuteChainDialog({ chain, onClose }: ExecuteChainDialo
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                       <span className="text-gray-600">Initial Amount:</span>
-                      <span className="ml-2 font-semibold">{result.initialAmount.toFixed(2)} {chain.baseAsset}</span>
+                      <span className="ml-2 font-semibold">
+                        {result.initialAmount != null ? result.initialAmount.toFixed(2) : baseAmount.toFixed(2)} {chain.baseAsset}
+                      </span>
                     </div>
                     <div>
                       <span className="text-gray-600">Final Amount:</span>
-                      <span className="ml-2 font-semibold">{result.finalAmount?.toFixed(2)} {chain.baseAsset}</span>
+                      <span className="ml-2 font-semibold">
+                        {result.finalAmount != null ? result.finalAmount.toFixed(2) : 'N/A'} {chain.baseAsset}
+                      </span>
                     </div>
                     <div>
                       <span className="text-gray-600">Actual Profit:</span>

@@ -24,6 +24,10 @@ public class ArbitrageChain {
     private Instant timestamp;
     private ChainStatus status;
     
+    // Execution details
+    private Double initialAmount;  // Amount used for execution
+    private Double finalAmount;    // Amount received after execution
+    
     public enum ChainStatus {
         FOUND,          // Знайдено, але не виконується
         EXECUTING,      // В процесі виконання

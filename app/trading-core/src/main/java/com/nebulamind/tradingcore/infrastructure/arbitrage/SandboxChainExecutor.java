@@ -78,6 +78,8 @@ public class SandboxChainExecutor implements ChainExecutor {
             
             chain.setStatus(ArbitrageChain.ChainStatus.COMPLETED);
             chain.setProfitPercent(profitPercent);
+            chain.setInitialAmount(context.startAmount);
+            chain.setFinalAmount(context.currentAmount);
             
             log.info("Chain execution completed: start={}, end={}, profit={}%", 
                     context.startAmount, context.currentAmount, profitPercent);
