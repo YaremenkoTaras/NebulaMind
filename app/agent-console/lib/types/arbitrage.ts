@@ -56,7 +56,7 @@ export interface TaskCreateRequest {
   minProfitPercent: number; // default 1.0
   maxAssets: number;
   chainLength: number;
-  slippageTolerance?: number; // default 1.0
+  slippageTolerance?: number; // default 0.5
   maxLossPerTrade?: number; // default 1.0
   enableCircuitBreaker?: boolean; // default true
   enableSmartSizing?: boolean; // default true

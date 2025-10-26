@@ -99,7 +99,7 @@ public class TaskService {
                 .totalLoss(0.0)
                 .executionsCount(0)
                 // Advanced settings with defaults
-                .slippageTolerance(request.getSlippageTolerance() != null ? request.getSlippageTolerance() : 1.0)
+                .slippageTolerance(request.getSlippageTolerance() != null ? request.getSlippageTolerance() : 0.5)
                 .maxLossPerTrade(request.getMaxLossPerTrade() != null ? request.getMaxLossPerTrade() : 1.0)
                 .enableCircuitBreaker(request.getEnableCircuitBreaker() != null ? request.getEnableCircuitBreaker() : true)
                 .enableSmartSizing(request.getEnableSmartSizing() != null ? request.getEnableSmartSizing() : true)
