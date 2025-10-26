@@ -6,8 +6,11 @@ import com.nebulamind.agentbuilder.dto.ArbitrageScanRequest;
 import com.nebulamind.agentbuilder.dto.ArbitrageScanResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -133,12 +136,17 @@ public class ArbitrageTools {
     }
     
     /**
-     * Execute arbitrage chain
+     * Execute arbitrage chain with retry logic
      * 
      * @param chainId Chain ID to execute
      * @param baseAmount Amount to trade
      * @return Execution result
      */
+    @Retryable(
+        retryFor = {WebClientResponseException.InternalServerError.class, WebClientResponseException.BadGateway.class, WebClientResponseException.ServiceUnavailable.class},
+        maxAttempts = 2,
+        backoff = @Backoff(delay = 1000)
+    )
     public Map<String, Object> executeArbitrageChain(String chainId, double baseAmount) {
         log.info("Agent tool: executeArbitrageChain - chainId={}, baseAmount={}", chainId, baseAmount);
         
@@ -158,17 +166,25 @@ public class ArbitrageTools {
         // Create request body matching trading-core's ExecuteChainRequest DTO
         Map<String, Object> requestBody = Map.of("baseAmount", baseAmount);
         
-        @SuppressWarnings("unchecked")
-        Map<String, Object> result = webClient.post()
-                .uri(coreApiUrl)
-                .bodyValue(requestBody)
-                .retrieve()
-                .bodyToMono(Map.class)
-                .block();
-        
-        log.info("Chain execution result: {}", result);
-        
-        return result;
+        try {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> result = webClient.post()
+                    .uri(coreApiUrl)
+                    .bodyValue(requestBody)
+                    .retrieve()
+                    .bodyToMono(Map.class)
+                    .block();
+            
+            log.info("Chain execution result: {}", result);
+            
+            return result;
+        } catch (WebClientResponseException e) {
+            log.error("Chain execution failed: {} {}", e.getStatusCode(), e.getResponseBodyAsString());
+            throw e;
+        } catch (Exception e) {
+            log.error("Chain execution failed with unexpected error: {}", e.getMessage());
+            throw e;
+        }
     }
     
     /**

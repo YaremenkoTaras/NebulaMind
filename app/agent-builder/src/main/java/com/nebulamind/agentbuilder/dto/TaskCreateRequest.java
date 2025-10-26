@@ -38,5 +38,11 @@ public class TaskCreateRequest {
     @NotNull(message = "Chain length is required")
     @Min(value = 3, message = "Chain length must be at least 3")
     private Integer chainLength;
+    
+    // Advanced settings with defaults
+    private Double slippageTolerance = 1.0; // Default 1%
+    private Double maxLossPerTrade = 1.0;   // Max 1% loss per trade
+    private Boolean enableCircuitBreaker = true;
+    private Boolean enableSmartSizing = true;
 }
 

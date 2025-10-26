@@ -32,6 +32,20 @@ public class Task {
     private Double totalLoss;
     private Integer executionsCount;
     
+    // Advanced settings
+    private Double slippageTolerance;
+    private Double maxLossPerTrade;
+    private Boolean enableCircuitBreaker;
+    private Boolean enableSmartSizing;
+    
+    // Runtime tracking
+    @Builder.Default
+    private Integer consecutiveLosses = 0;
+    @Builder.Default
+    private Integer consecutiveWins = 0;
+    private Double maxDrawdown;
+    private String stoppedReason;
+    
     @Builder.Default
     private List<ArbitrageExecution> executions = new ArrayList<>();
     
@@ -39,13 +53,25 @@ public class Task {
         this.executions.add(execution);
         this.executionsCount = this.executions.size();
         
-        if (execution.getProfitAmount() > 0) {
-            this.totalProfit += execution.getProfitAmount();
+        double profitAmount = execution.getProfitAmount();
+        
+        if (profitAmount > 0) {
+            this.totalProfit += profitAmount;
+            this.consecutiveWins++;
+            this.consecutiveLosses = 0;
         } else {
-            this.totalLoss += Math.abs(execution.getProfitAmount());
+            this.totalLoss += Math.abs(profitAmount);
+            this.consecutiveLosses++;
+            this.consecutiveWins = 0;
         }
         
-        this.currentBudget += execution.getProfitAmount();
+        this.currentBudget += profitAmount;
+        
+        // Track max drawdown
+        double currentDrawdown = (this.totalLoss - this.totalProfit) / this.budget * 100;
+        if (this.maxDrawdown == null || currentDrawdown > this.maxDrawdown) {
+            this.maxDrawdown = currentDrawdown;
+        }
     }
 }
 

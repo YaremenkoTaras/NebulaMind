@@ -56,6 +56,10 @@ export interface TaskCreateRequest {
   minProfitPercent: number; // default 1.0
   maxAssets: number;
   chainLength: number;
+  slippageTolerance?: number; // default 1.0
+  maxLossPerTrade?: number; // default 1.0
+  enableCircuitBreaker?: boolean; // default true
+  enableSmartSizing?: boolean; // default true
 }
 
 export interface ArbitrageExecution {
@@ -90,6 +94,16 @@ export interface Task {
   totalLoss: number;
   executionsCount: number;
   executions: ArbitrageExecution[];
+  // Advanced settings
+  slippageTolerance?: number;
+  maxLossPerTrade?: number;
+  enableCircuitBreaker?: boolean;
+  enableSmartSizing?: boolean;
+  // Runtime tracking
+  consecutiveLosses?: number;
+  consecutiveWins?: number;
+  maxDrawdown?: number;
+  stoppedReason?: string;
 }
 
 export interface TaskStatistics {

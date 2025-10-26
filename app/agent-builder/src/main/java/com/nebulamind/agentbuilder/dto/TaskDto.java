@@ -33,6 +33,18 @@ public class TaskDto {
     private Double totalLoss;
     private Integer executionsCount;
     
+    // Advanced settings
+    private Double slippageTolerance;
+    private Double maxLossPerTrade;
+    private Boolean enableCircuitBreaker;
+    private Boolean enableSmartSizing;
+    
+    // Runtime tracking
+    private Integer consecutiveLosses;
+    private Integer consecutiveWins;
+    private Double maxDrawdown;
+    private String stoppedReason;
+    
     @Builder.Default
     private List<ArbitrageExecutionDto> executions = new ArrayList<>();
 }

@@ -98,6 +98,15 @@ public class TaskService {
                 .totalProfit(0.0)
                 .totalLoss(0.0)
                 .executionsCount(0)
+                // Advanced settings with defaults
+                .slippageTolerance(request.getSlippageTolerance() != null ? request.getSlippageTolerance() : 1.0)
+                .maxLossPerTrade(request.getMaxLossPerTrade() != null ? request.getMaxLossPerTrade() : 1.0)
+                .enableCircuitBreaker(request.getEnableCircuitBreaker() != null ? request.getEnableCircuitBreaker() : true)
+                .enableSmartSizing(request.getEnableSmartSizing() != null ? request.getEnableSmartSizing() : true)
+                // Runtime tracking
+                .consecutiveLosses(0)
+                .consecutiveWins(0)
+                .maxDrawdown(0.0)
                 .executions(new ArrayList<>())
                 .build();
         
@@ -231,9 +240,24 @@ public class TaskService {
         
         task.setStatus(TaskStatus.FAILED);
         task.setCompletedAt(Instant.now());
+        task.setStoppedReason(errorMessage);
         saveTaskToDisk(task);
         
         log.error("Failed task {}: {}", taskId, errorMessage);
+    }
+    
+    public void emergencyStopTask(String taskId, String reason) {
+        Task task = tasks.get(taskId);
+        if (task == null) {
+            return;
+        }
+        
+        task.setStatus(TaskStatus.STOPPED);
+        task.setCompletedAt(Instant.now());
+        task.setStoppedReason("EMERGENCY_STOP: " + reason);
+        saveTaskToDisk(task);
+        
+        log.warn("Emergency stop task {}: {}", taskId, reason);
     }
     
     private TaskDto toDto(Task task) {
@@ -254,6 +278,16 @@ public class TaskService {
                 .totalProfit(task.getTotalProfit())
                 .totalLoss(task.getTotalLoss())
                 .executionsCount(task.getExecutionsCount())
+                // Advanced settings
+                .slippageTolerance(task.getSlippageTolerance())
+                .maxLossPerTrade(task.getMaxLossPerTrade())
+                .enableCircuitBreaker(task.getEnableCircuitBreaker())
+                .enableSmartSizing(task.getEnableSmartSizing())
+                // Runtime tracking
+                .consecutiveLosses(task.getConsecutiveLosses())
+                .consecutiveWins(task.getConsecutiveWins())
+                .maxDrawdown(task.getMaxDrawdown())
+                .stoppedReason(task.getStoppedReason())
                 .executions(task.getExecutions().stream()
                         .map(this::toExecutionDto)
                         .collect(Collectors.toList()))
