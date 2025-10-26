@@ -57,5 +57,20 @@ public interface ExchangeGateway {
      * @return true if exchange is reachable
      */
     boolean isAvailable();
+    
+    /**
+     * Get list of available trading pairs
+     * 
+     * @return List of trading pair symbols (e.g., ["BTCUSDT", "ETHUSDT"])
+     */
+    java.util.List<String> getAvailablePairs();
+    
+    /**
+     * Check if a trading pair is active
+     * 
+     * @param symbol Trading pair symbol
+     * @return true if pair is available for trading
+     */
+    boolean isPairActive(String symbol);
 }
 

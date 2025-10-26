@@ -62,6 +62,7 @@ llm-trades.log
 # Temp files
 tmp/
 temp/
+spec/
 
 # PID files from run-local.sh
 .trading-core.pid

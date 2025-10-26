@@ -163,9 +163,13 @@ fly deploy
 
 ## 📚 Документація
 
-- [Повна специфікація](spec/spec_tradin_bot_with_cicd.md) — детальні вимоги та архітектура
+- [QUICKSTART](docs/QUICKSTART.md) — швидкий старт з проєктом
+- [ARCHITECTURE](docs/ARCHITECTURE.md) — детальна архітектура
+- [CONTRIBUTING](CONTRIBUTING.md) — як зробити внесок у проєкт
+- [GIT WORKFLOW](docs/GIT_WORKFLOW.md) — правила роботи з Git та GitHub
 - [CHANGELOG](CHANGELOG.md) — історія змін проєкту
 - [DEPLOY-SPEC-FLYIO](docs/DEPLOY-SPEC-FLYIO.md) — інструкції з деплою
+- [PROJECT_STATUS](PROJECT_STATUS.md) — поточний статус проєкту
 
 ## 🔐 Безпека
 
@@ -193,6 +197,17 @@ MIT
 ## 🤝 Внесок
 
 Проєкт знаходиться в активній розробці. Pull requests вітаються!
+
+Детальна інформація про процес контрибуції:
+- [CONTRIBUTING.md](CONTRIBUTING.md) - правила контрибуції
+- [docs/GIT_WORKFLOW.md](docs/GIT_WORKFLOW.md) - Git workflow та best practices
+
+Основні напрямки для контрибуції:
+- 🎨 **Frontend** - Console UI реалізація
+- 🔌 **Binance Integration** - Real API adapter
+- 🤖 **LLM Integration** - OpenAI GPT-4 calls
+- 🧪 **Testing** - Integration та E2E tests
+- ⚡ **Features** - Technical indicators, strategies
 
 ---
 

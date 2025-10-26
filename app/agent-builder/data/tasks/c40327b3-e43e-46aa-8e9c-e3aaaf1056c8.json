@@ -1,0 +1,329 @@
+{
+  "id" : "c40327b3-e43e-46aa-8e9c-e3aaaf1056c8",
+  "status" : "COMPLETED",
+  "baseAsset" : "USDT",
+  "budget" : 100.0,
+  "currentBudget" : 100.51078836019153,
+  "executionTimeMinutes" : 5,
+  "delaySeconds" : 2,
+  "minProfitPercent" : 1.1,
+  "maxAssets" : 20,
+  "chainLength" : 3,
+  "createdAt" : "2025-10-26T06:11:46.733375Z",
+  "startedAt" : "2025-10-26T06:11:46.743654Z",
+  "completedAt" : "2025-10-26T06:16:51.328948Z",
+  "totalProfit" : 0.818045310936288,
+  "totalLoss" : 0.30725695074477244,
+  "executionsCount" : 17,
+  "executions" : [ {
+    "id" : "cd87d99b-a040-4e35-9ded-661769798b8d",
+    "chainId" : "9a0ad533-59fd-4b2d-82a0-71c9e0771324",
+    "chain" : {
+      "id" : "9a0ad533-59fd-4b2d-82a0-71c9e0771324",
+      "baseAsset" : "USDT",
+      "steps" : [ "SOLUSDT", "SOLETH", "ETHUSDT" ],
+      "profitPercent" : 1.3115629426654563,
+      "minRequiredAmount" : 10.0,
+      "timestamp" : "2025-10-26T06:11:51.354424Z"
+    },
+    "timestamp" : "2025-10-26T06:11:51.366760Z",
+    "initialAmount" : 10.0,
+    "finalAmount" : 9.971793516932012,
+    "profitAmount" : -0.02820648306798823,
+    "profitPercent" : -0.2820648306798823,
+    "expectedProfitPercent" : 1.3115629426654563,
+    "status" : "COMPLETED"
+  }, {
+    "id" : "8073d977-6830-4b2e-9317-a000a967fdfd",
+    "chainId" : "6e9af1ac-4865-41f4-927b-9b21f1e65d90",
+    "chain" : {
+      "id" : "6e9af1ac-4865-41f4-927b-9b21f1e65d90",
+      "baseAsset" : "USDT",
+      "steps" : [ "BNBUSDT", "BNBBTC", "BTCUSDT" ],
+      "profitPercent" : 1.2435719630228936,
+      "minRequiredAmount" : 10.0,
+      "timestamp" : "2025-10-26T06:12:01.333514Z"
+    },
+    "timestamp" : "2025-10-26T06:12:01.364988Z",
+    "initialAmount" : 10.0,
+    "finalAmount" : 10.0,
+    "profitAmount" : 0.0,
+    "profitPercent" : 0.0,
+    "expectedProfitPercent" : 1.2435719630228936,
+    "status" : "FAILED",
+    "errorMessage" : "500 Internal Server Error from POST http://localhost:8081/api/core/arbitrage/chains/6e9af1ac-4865-41f4-927b-9b21f1e65d90/execute"
+  }, {
+    "id" : "eec85b61-c33c-4bef-9ccd-bd2ce9b371de",
+    "chainId" : "feb373ea-ac98-42e2-81f9-6678e960a3e1",
+    "chain" : {
+      "id" : "feb373ea-ac98-42e2-81f9-6678e960a3e1",
+      "baseAsset" : "USDT",
+      "steps" : [ "SOLUSDT", "SOLETH", "ETHUSDT" ],
+      "profitPercent" : 1.1231958876516845,
+      "minRequiredAmount" : 10.0,
+      "timestamp" : "2025-10-26T06:12:16.332528Z"
+    },
+    "timestamp" : "2025-10-26T06:12:16.338864Z",
+    "initialAmount" : 10.0,
+    "finalAmount" : 9.957703398081078,
+    "profitAmount" : -0.04229660191892215,
+    "profitPercent" : -0.42296601918922155,
+    "expectedProfitPercent" : 1.1231958876516845,
+    "status" : "COMPLETED"
+  }, {
+    "id" : "fad24c0b-7aaf-4096-9ad7-7c4484353b51",
+    "chainId" : "3d2dc63d-d77b-4af0-8ca1-8090131175c7",
+    "chain" : {
+      "id" : "3d2dc63d-d77b-4af0-8ca1-8090131175c7",
+      "baseAsset" : "USDT",
+      "steps" : [ "ETHUSDT", "ADAETH", "ADAUSDT" ],
+      "profitPercent" : 1.293247684644716,
+      "minRequiredAmount" : 10.0,
+      "timestamp" : "2025-10-26T06:12:26.330359Z"
+    },
+    "timestamp" : "2025-10-26T06:12:26.336746Z",
+    "initialAmount" : 10.0,
+    "finalAmount" : 9.99909682951048,
+    "profitAmount" : -9.031704895203774E-4,
+    "profitPercent" : -0.009031704895203774,
+    "expectedProfitPercent" : 1.293247684644716,
+    "status" : "COMPLETED"
+  }, {
+    "id" : "a8927fde-d7a2-4854-a6b2-7170a12a80f7",
+    "chainId" : "81ac5209-95d1-475b-8225-90eb112c2a8a",
+    "chain" : {
+      "id" : "81ac5209-95d1-475b-8225-90eb112c2a8a",
+      "baseAsset" : "USDT",
+      "steps" : [ "ETHUSDT", "XRPETH", "XRPUSDT" ],
+      "profitPercent" : 1.1683925710931797,
+      "minRequiredAmount" : 10.0,
+      "timestamp" : "2025-10-26T06:13:06.326236Z"
+    },
+    "timestamp" : "2025-10-26T06:13:06.331654Z",
+    "initialAmount" : 10.0,
+    "finalAmount" : 10.047310980828478,
+    "profitAmount" : 0.04731098082847751,
+    "profitPercent" : 0.47310980828477506,
+    "expectedProfitPercent" : 1.1683925710931797,
+    "status" : "COMPLETED"
+  }, {
+    "id" : "994d5347-784b-477a-836f-81b9c113c43f",
+    "chainId" : "b20e3049-940f-49cd-90ec-5c85de05162b",
+    "chain" : {
+      "id" : "b20e3049-940f-49cd-90ec-5c85de05162b",
+      "baseAsset" : "USDT",
+      "steps" : [ "ETHUSDT", "MATICETH", "MATICUSDT" ],
+      "profitPercent" : 1.4200432384975814,
+      "minRequiredAmount" : 10.0,
+      "timestamp" : "2025-10-26T06:13:11.329042Z"
+    },
+    "timestamp" : "2025-10-26T06:13:11.331901Z",
+    "initialAmount" : 10.0,
+    "finalAmount" : 9.909052670448645,
+    "profitAmount" : -0.09094732955135498,
+    "profitPercent" : -0.9094732955135498,
+    "expectedProfitPercent" : 1.4200432384975814,
+    "status" : "COMPLETED"
+  }, {
+    "id" : "a65f628c-5edf-4912-9159-4ff47c40e841",
+    "chainId" : "254aed5a-a0eb-4d54-bc07-663d74fb67ae",
+    "chain" : {
+      "id" : "254aed5a-a0eb-4d54-bc07-663d74fb67ae",
+      "baseAsset" : "USDT",
+      "steps" : [ "ADAUSDT", "ADABTC", "BTCUSDT" ],
+      "profitPercent" : 1.1716730848762458,
+      "minRequiredAmount" : 10.0,
+      "timestamp" : "2025-10-26T06:13:36.330573Z"
+    },
+    "timestamp" : "2025-10-26T06:13:36.335160Z",
+    "initialAmount" : 10.0,
+    "finalAmount" : 10.0,
+    "profitAmount" : 0.0,
+    "profitPercent" : 0.0,
+    "expectedProfitPercent" : 1.1716730848762458,
+    "status" : "FAILED",
+    "errorMessage" : "500 Internal Server Error from POST http://localhost:8081/api/core/arbitrage/chains/254aed5a-a0eb-4d54-bc07-663d74fb67ae/execute"
+  }, {
+    "id" : "545e48a1-e5b2-43d5-afa9-e00345b2f52c",
+    "chainId" : "b2ee5593-4fc8-4b1f-b159-fd9d497a221a",
+    "chain" : {
+      "id" : "b2ee5593-4fc8-4b1f-b159-fd9d497a221a",
+      "baseAsset" : "USDT",
+      "steps" : [ "ADAUSDT", "ADABTC", "BTCUSDT" ],
+      "profitPercent" : 1.1926130628336695,
+      "minRequiredAmount" : 10.0,
+      "timestamp" : "2025-10-26T06:14:01.334001Z"
+    },
+    "timestamp" : "2025-10-26T06:14:01.341670Z",
+    "initialAmount" : 10.0,
+    "finalAmount" : 10.0,
+    "profitAmount" : 0.0,
+    "profitPercent" : 0.0,
+    "expectedProfitPercent" : 1.1926130628336695,
+    "status" : "FAILED",
+    "errorMessage" : "500 Internal Server Error from POST http://localhost:8081/api/core/arbitrage/chains/b2ee5593-4fc8-4b1f-b159-fd9d497a221a/execute"
+  }, {
+    "id" : "865dd999-7dc8-457f-9d13-fec3c826d9da",
+    "chainId" : "64b2777b-1f7a-4a40-b90a-0414851ef53d",
+    "chain" : {
+      "id" : "64b2777b-1f7a-4a40-b90a-0414851ef53d",
+      "baseAsset" : "USDT",
+      "steps" : [ "ETHUSDT", "XRPETH", "XRPUSDT" ],
+      "profitPercent" : 1.1604889672240493,
+      "minRequiredAmount" : 10.0,
+      "timestamp" : "2025-10-26T06:14:06.338458Z"
+    },
+    "timestamp" : "2025-10-26T06:14:06.346272Z",
+    "initialAmount" : 10.0,
+    "finalAmount" : 9.931754317920308,
+    "profitAmount" : -0.0682456820796915,
+    "profitPercent" : -0.682456820796915,
+    "expectedProfitPercent" : 1.1604889672240493,
+    "status" : "COMPLETED"
+  }, {
+    "id" : "26ade551-23e9-46b2-8afb-185262b619d2",
+    "chainId" : "6d48b6d1-89a0-4ae9-9f60-9f63fa765d87",
+    "chain" : {
+      "id" : "6d48b6d1-89a0-4ae9-9f60-9f63fa765d87",
+      "baseAsset" : "USDT",
+      "steps" : [ "BTCUSDT", "SOLBTC", "SOLUSDT" ],
+      "profitPercent" : 1.1584964301859069,
+      "minRequiredAmount" : 60.0,
+      "timestamp" : "2025-10-26T06:14:16.333207Z"
+    },
+    "timestamp" : "2025-10-26T06:14:16.339400Z",
+    "initialAmount" : 60.0,
+    "finalAmount" : 60.12682146755561,
+    "profitAmount" : 0.12682146755560808,
+    "profitPercent" : 0.21136911259268015,
+    "expectedProfitPercent" : 1.1584964301859069,
+    "status" : "COMPLETED"
+  }, {
+    "id" : "6cd3bf1f-01aa-475a-9fde-ef05c710d0f1",
+    "chainId" : "f70da5db-3ac4-453b-97f8-2bfa3c868257",
+    "chain" : {
+      "id" : "f70da5db-3ac4-453b-97f8-2bfa3c868257",
+      "baseAsset" : "USDT",
+      "steps" : [ "DOTUSDT", "DOTETH", "ETHUSDT" ],
+      "profitPercent" : 1.2538825706901457,
+      "minRequiredAmount" : 10.0,
+      "timestamp" : "2025-10-26T06:14:21.335063Z"
+    },
+    "timestamp" : "2025-10-26T06:14:21.342257Z",
+    "initialAmount" : 10.0,
+    "finalAmount" : 10.027345113640774,
+    "profitAmount" : 0.027345113640773633,
+    "profitPercent" : 0.27345113640773633,
+    "expectedProfitPercent" : 1.2538825706901457,
+    "status" : "COMPLETED"
+  }, {
+    "id" : "06ab3f8c-594e-418c-97d0-1a9f5d661660",
+    "chainId" : "01a8253d-1ed0-4c55-974d-7ab18a7b5567",
+    "chain" : {
+      "id" : "01a8253d-1ed0-4c55-974d-7ab18a7b5567",
+      "baseAsset" : "USDT",
+      "steps" : [ "BTCUSDT", "ETHBTC", "ETHUSDT" ],
+      "profitPercent" : 1.1097285517039923,
+      "minRequiredAmount" : 60.0,
+      "timestamp" : "2025-10-26T06:14:46.329161Z"
+    },
+    "timestamp" : "2025-10-26T06:14:46.332170Z",
+    "initialAmount" : 60.0,
+    "finalAmount" : 60.51026699962857,
+    "profitAmount" : 0.5102669996285698,
+    "profitPercent" : 0.8504449993809498,
+    "expectedProfitPercent" : 1.1097285517039923,
+    "status" : "COMPLETED"
+  }, {
+    "id" : "b2423edc-bb48-4267-ab89-f1ca794ac24a",
+    "chainId" : "f3352c46-2cf9-46fe-b17b-20bce292ad66",
+    "chain" : {
+      "id" : "f3352c46-2cf9-46fe-b17b-20bce292ad66",
+      "baseAsset" : "USDT",
+      "steps" : [ "ETHUSDT", "ETHBTC", "BTCUSDT" ],
+      "profitPercent" : 1.199232445420506,
+      "minRequiredAmount" : 10.0,
+      "timestamp" : "2025-10-26T06:14:56.335686Z"
+    },
+    "timestamp" : "2025-10-26T06:14:56.344029Z",
+    "initialAmount" : 10.0,
+    "finalAmount" : 10.0,
+    "profitAmount" : 0.0,
+    "profitPercent" : 0.0,
+    "expectedProfitPercent" : 1.199232445420506,
+    "status" : "FAILED",
+    "errorMessage" : "500 Internal Server Error from POST http://localhost:8081/api/core/arbitrage/chains/f3352c46-2cf9-46fe-b17b-20bce292ad66/execute"
+  }, {
+    "id" : "1aba18db-56c4-4083-8017-e64fac8e64fa",
+    "chainId" : "ed53ab15-df75-41c2-8fb2-e214d2d8c816",
+    "chain" : {
+      "id" : "ed53ab15-df75-41c2-8fb2-e214d2d8c816",
+      "baseAsset" : "USDT",
+      "steps" : [ "ETHUSDT", "DOTETH", "DOTUSDT" ],
+      "profitPercent" : 1.1137192404680807,
+      "minRequiredAmount" : 10.0,
+      "timestamp" : "2025-10-26T06:15:21.331309Z"
+    },
+    "timestamp" : "2025-10-26T06:15:21.335577Z",
+    "initialAmount" : 10.0,
+    "finalAmount" : 10.049778347804821,
+    "profitAmount" : 0.049778347804821266,
+    "profitPercent" : 0.49778347804821266,
+    "expectedProfitPercent" : 1.1137192404680807,
+    "status" : "COMPLETED"
+  }, {
+    "id" : "efad80cb-8327-4011-bb14-a5aff6ba79aa",
+    "chainId" : "4c4a86c8-6067-49ae-86dd-d8955031cec1",
+    "chain" : {
+      "id" : "4c4a86c8-6067-49ae-86dd-d8955031cec1",
+      "baseAsset" : "USDT",
+      "steps" : [ "LTCUSDT", "LTCETH", "ETHUSDT" ],
+      "profitPercent" : 1.2608766317437903,
+      "minRequiredAmount" : 10.0,
+      "timestamp" : "2025-10-26T06:15:46.329332Z"
+    },
+    "timestamp" : "2025-10-26T06:15:46.332848Z",
+    "initialAmount" : 10.0,
+    "finalAmount" : 10.056522401478038,
+    "profitAmount" : 0.056522401478037665,
+    "profitPercent" : 0.5652240147803766,
+    "expectedProfitPercent" : 1.2608766317437903,
+    "status" : "COMPLETED"
+  }, {
+    "id" : "955fc604-528f-43e0-8c62-a51fc53b78b9",
+    "chainId" : "8cd9a04e-d570-44c9-881d-22f275355aae",
+    "chain" : {
+      "id" : "8cd9a04e-d570-44c9-881d-22f275355aae",
+      "baseAsset" : "USDT",
+      "steps" : [ "BNBUSDT", "BNBETH", "ETHUSDT" ],
+      "profitPercent" : 1.1029928038326808,
+      "minRequiredAmount" : 10.0,
+      "timestamp" : "2025-10-26T06:16:26.334153Z"
+    },
+    "timestamp" : "2025-10-26T06:16:26.339515Z",
+    "initialAmount" : 10.0,
+    "finalAmount" : 9.971724919652088,
+    "profitAmount" : -0.02827508034791215,
+    "profitPercent" : -0.2827508034791215,
+    "expectedProfitPercent" : 1.1029928038326808,
+    "status" : "COMPLETED"
+  }, {
+    "id" : "85efab4f-7db1-4f74-abcf-df1890edcb7a",
+    "chainId" : "f6996a7e-96a7-4096-9167-4c371a3561fb",
+    "chain" : {
+      "id" : "f6996a7e-96a7-4096-9167-4c371a3561fb",
+      "baseAsset" : "USDT",
+      "steps" : [ "ETHUSDT", "MATICETH", "MATICUSDT" ],
+      "profitPercent" : 1.1722093233487607,
+      "minRequiredAmount" : 10.0,
+      "timestamp" : "2025-10-26T06:16:31.332860Z"
+    },
+    "timestamp" : "2025-10-26T06:16:31.335560Z",
+    "initialAmount" : 10.0,
+    "finalAmount" : 9.951617396710617,
+    "profitAmount" : -0.04838260328938304,
+    "profitPercent" : -0.4838260328938304,
+    "expectedProfitPercent" : 1.1722093233487607,
+    "status" : "COMPLETED"
+  } ]
+}
