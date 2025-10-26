@@ -22,7 +22,7 @@ export default function TaskCreateForm({
     budget: 100,
     executionTimeMinutes: 5,
     delaySeconds: 10,
-    minProfitPercent: 1.0,
+    minProfitPercent: 0.5, // Lowered from 1.0% to allow more chains to execute
     maxAssets: 20,
     chainLength: 3,
   });

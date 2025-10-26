@@ -53,7 +53,7 @@ export interface TaskCreateRequest {
   budget: number; // default 100
   executionTimeMinutes: number; // default 5
   delaySeconds: number; // default 10
-  minProfitPercent: number; // default 1.0
+  minProfitPercent: number; // default 0.5
   maxAssets: number;
   chainLength: number;
   slippageTolerance?: number; // default 0.5
